@@ -33,7 +33,7 @@ const User = sequelize.define(
             type: DataTypes.STRING, // Could be a URL
             allowNull: true,
         },
-        usertype: {
+        user_type: {
             type: DataTypes.ENUM("admin", "teacher", "student"),
             allowNull: false,
             defaultValue: "student",
@@ -47,7 +47,7 @@ const User = sequelize.define(
             allowNull: true,
         },
         refresh_token: {
-            type: DataTypes.TEXT,
+            type: DataTypes.STRING,
             allowNull: true,
         },
         password: {

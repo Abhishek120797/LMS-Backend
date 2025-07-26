@@ -41,7 +41,7 @@ const Course = sequelize.define(
             allowNull: false,
             defaultValue: "Draft",
         },
-        cover_image: {
+        thumbnail: {
             type: DataTypes.STRING,
             allowNull: true,
         },
