@@ -1,5 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db/db.js";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const User = sequelize.define(
     "User",
@@ -59,8 +61,53 @@ const User = sequelize.define(
         timestamps: true,
         createdAt: "created_at",
         updatedAt: "updated_at",
-        tableName: "users", // optional: define table name
+        tableName: "users",
+        hooks: {
+            beforeCreate: async (user) => {
+                if (user.password) {
+                    const salt = await bcrypt.genSalt(10);
+                    user.password = await bcrypt.hash(user.password, salt);
+                }
+            },
+            beforeUpdate: async (user) => {
+                if (user.changed("password")) {
+                    const salt = await bcrypt.genSalt(10);
+                    user.password = await bcrypt.hash(user.password, salt);
+                }
+            },
+        },
     }
 );
+
+User.prototype.comparePassword = async function (enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
+
+User.prototype.generateAccessToken = function () {
+    return jwt.sign(
+        {
+            user_id: this.user_id,
+            email: this.email,
+            first_name: this.first_name,
+            last_name: this.last_name,
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+        }
+    );
+};
+
+User.prototype.generateRefreshToken = function () {
+    return jwt.sign(
+        {
+            user_id: this.user_id,
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        {
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+        }
+    );
+};
 
 export default User;
