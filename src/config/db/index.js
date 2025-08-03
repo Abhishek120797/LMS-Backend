@@ -3,7 +3,7 @@ import associateModels from "../../models/associations.js";
 
 const connectDB = async () => {
     try {
-        console.log(sequelize);
+        // console.log(sequelize);
         await sequelize.authenticate();
         console.log("Database Connection has been established successfully.");
 
