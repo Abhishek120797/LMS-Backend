@@ -28,4 +28,6 @@ jobs:
     - run: |
         touch .env
         echo "${{secrets.PROD_ENF_FILE}}" > .env
-    - run: pm2 restart LMS-backend
+    - run: |
+        npm install -g pm2
+        pm2 restart LMS-backend
