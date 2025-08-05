@@ -45,7 +45,7 @@ const validateRegister = [
 
 const validateVerifyRegister = [
     body("email").notEmpty().withMessage("email ie required"),
-    (req, res, nest) => {
+    (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             const formatted = errors.array().map((e) => ({
